@@ -34,6 +34,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -47,8 +48,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,8 +63,11 @@ import com.developersandgraphics.apuntedomino.back.models.Game
 import com.developersandgraphics.apuntedomino.back.models.Score
 import com.developersandgraphics.apuntedomino.back.models.Team
 import com.developersandgraphics.apuntedomino.ui.theme.ApunteDominoTheme
+import com.developersandgraphics.apuntedomino.ui.theme.DarkGreen
 import com.developersandgraphics.apuntedomino.ui.theme.Green
 import com.developersandgraphics.apuntedomino.ui.theme.Orange
+import com.developersandgraphics.apuntedomino.ui.theme.Primary
+import com.developersandgraphics.apuntedomino.ui.theme.Red
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -197,15 +203,13 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = { onShowDialog("CANCEL") }, modifier = modifier
-                        .clip(CircleShape)
-                        .size(70.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    )
+                IconButton(
+                    onClick = { onShowDialog("CANCEL") },
+                    //colors = ButtonDefaults.buttonColors(
+                    //    containerColor = Color.Red
+                    //)
                 ) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Cancel button")
+                    Icon(imageVector = Icons.Default.Close, contentDescription = "Cancel button", tint = Red)
                 }
             }
             Column(
@@ -213,12 +217,10 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = { onShowDialog("ADD") }, modifier = modifier
-                        .clip(CircleShape)
-                        .size(70.dp)
+                IconButton(
+                    onClick = { onShowDialog("ADD") },
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add button")
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add button", tint = Primary)
                 }
             }
             Column(
@@ -226,15 +228,13 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = { onShowDialog("FINISH") }, modifier = modifier
-                        .clip(CircleShape)
-                        .size(70.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Green
-                    )
+                IconButton(
+                    onClick = { onShowDialog("FINISH") },
+                    //colors = ButtonDefaults.buttonColors(
+                    //    containerColor = Color.Green
+                    //)
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Check button")
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "Check button", tint = DarkGreen)
                 }
             }
         }
@@ -256,7 +256,7 @@ fun Matches(modifier: Modifier, matches: List<Score>, onDeleteScore: (Score) -> 
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Puntaje",
+                text = "Puntuaje",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -319,35 +319,28 @@ fun CardTeam(modifier: Modifier, team: Team, totalPoints: Int, number: String, c
             containerColor = MaterialTheme.colorScheme.tertiary
         )
     ) {
-        Column(Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Spacer(modifier = Modifier.size(17.dp))
-                Text(
-                    text = number,
-                    fontSize = 50.sp,
-                    modifier = Modifier
-                        .drawBehind {
-                            drawCircle(
-                                color = color,
-                                radius = this.size.minDimension
-                            )
-                        },
-                    color = Color.White
-
-                )
-                Spacer(modifier = Modifier.size(4.dp))
-                Text(
-                    text = team.name,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(start = 15.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
-            Spacer(Modifier.size(20.dp))
+        Column(
+            Modifier.padding(8.dp).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Equipo #$number",
+                fontSize = 18.sp,
+                color = color,
+                style = TextStyle(
+                    baselineShift = BaselineShift.Superscript
+                ),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = team.name,
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp
+            )
+            Spacer(Modifier.size(10.dp))
             Text(
                 text = "${team.points}/${totalPoints}",
                 fontSize = 25.sp,
@@ -596,7 +589,7 @@ fun ConfirmDialog(
 fun LoadingDialog(show: Boolean) {
     if (show) {
         Dialog(
-            onDismissRequest = {  },
+            onDismissRequest = { },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             CircularProgressIndicator(modifier = Modifier.size(50.dp))
