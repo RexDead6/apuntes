@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +34,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -45,9 +48,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -59,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.developersandgraphics.apuntedomino.R
 import com.developersandgraphics.apuntedomino.back.models.Game
 import com.developersandgraphics.apuntedomino.back.models.Score
 import com.developersandgraphics.apuntedomino.back.models.Team
@@ -68,6 +75,7 @@ import com.developersandgraphics.apuntedomino.ui.theme.Green
 import com.developersandgraphics.apuntedomino.ui.theme.Orange
 import com.developersandgraphics.apuntedomino.ui.theme.Primary
 import com.developersandgraphics.apuntedomino.ui.theme.Red
+import com.developersandgraphics.apuntedomino.ui.theme.Transparent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -181,16 +189,16 @@ fun Body(mainViewModel: MainViewModel) {
                 .fillMaxWidth(), game.games_scores,
             onDeleteScore = { mainViewModel.onClickDeleteScore(it) }
         )
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(20.dp))
         Footer(Modifier, onShowDialog = { mainViewModel.showDialog(it) })
     }
 }
 
 @Composable
 fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
-    ElevatedCard(
+    Card(
         modifier = modifier, colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiary
+            containerColor = Transparent
         )
     ) {
         Row(
@@ -203,13 +211,17 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconButton(
+                FilledIconButton(
                     onClick = { onShowDialog("CANCEL") },
-                    //colors = ButtonDefaults.buttonColors(
-                    //    containerColor = Color.Red
-                    //)
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = Red
+                    )
                 ) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Cancel button", tint = Red)
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Cancel button",
+                        tint = Color.White
+                    )
                 }
             }
             Column(
@@ -217,10 +229,17 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconButton(
+                FilledIconButton(
                     onClick = { onShowDialog("ADD") },
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = Primary
+                    )
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add button", tint = Primary)
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add button",
+                        tint = Color.White
+                    )
                 }
             }
             Column(
@@ -228,13 +247,17 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconButton(
+                FilledIconButton(
                     onClick = { onShowDialog("FINISH") },
-                    //colors = ButtonDefaults.buttonColors(
-                    //    containerColor = Color.Green
-                    //)
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = DarkGreen
+                    )
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Check button", tint = DarkGreen)
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Check button",
+                        tint = Color.White
+                    )
                 }
             }
         }
@@ -243,10 +266,10 @@ fun Footer(modifier: Modifier, onShowDialog: (String) -> Unit) {
 
 @Composable
 fun Matches(modifier: Modifier, matches: List<Score>, onDeleteScore: (Score) -> Unit) {
-    ElevatedCard(
+    Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiary
+            containerColor = Transparent
         )
     ) {
         Column(
@@ -259,7 +282,7 @@ fun Matches(modifier: Modifier, matches: List<Score>, onDeleteScore: (Score) -> 
                 text = "Puntuaje",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color.White,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.size(10.dp))
@@ -278,7 +301,7 @@ fun CardItem(score: Score, onClickDelete: (Score) -> Unit) {
         Text(
             text = score.score_a.toString(),
             fontWeight = FontWeight.Bold,
-            color = if (score.status == "ACTIVO") MaterialTheme.colorScheme.onBackground else Color.Gray,
+            color = if (score.status == "ACTIVO") Color.White else Color.Gray,
             fontSize = 25.sp,
             textDecoration = if (score.status == "ACTIVO") TextDecoration.None else TextDecoration.LineThrough
         )
@@ -287,12 +310,12 @@ fun CardItem(score: Score, onClickDelete: (Score) -> Unit) {
                 .height(2.dp)
                 .weight(1f)
                 .padding(start = 16.dp, end = 16.dp)
-                .background(if (score.status == "ACTIVO") MaterialTheme.colorScheme.onBackground else Color.Gray)
+                .background(if (score.status == "ACTIVO") Color.White else Color.Gray)
         )
         Text(
             text = score.score_b.toString(),
             fontWeight = FontWeight.Bold,
-            color = if (score.status == "ACTIVO") MaterialTheme.colorScheme.onBackground else Color.Gray,
+            color = if (score.status == "ACTIVO") Color.White else Color.Gray,
             fontSize = 25.sp,
             textDecoration = if (score.status == "ACTIVO") TextDecoration.None else TextDecoration.LineThrough
         )
@@ -300,7 +323,7 @@ fun CardItem(score: Score, onClickDelete: (Score) -> Unit) {
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = "Close item",
-            tint = if (score.status == "ACTIVO") Color.Red else Color.Gray,
+            tint = if (score.status == "ACTIVO") Red else Color.Gray,
             modifier = Modifier.clickable {
                 if (score.status == "ACTIVO") {
                     onClickDelete(score)
@@ -313,14 +336,16 @@ fun CardItem(score: Score, onClickDelete: (Score) -> Unit) {
 
 @Composable
 fun CardTeam(modifier: Modifier, team: Team, totalPoints: Int, number: String, color: Color) {
-    ElevatedCard(
+    Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiary
+            containerColor = Transparent
         )
     ) {
         Column(
-            Modifier.padding(8.dp).fillMaxWidth(),
+            Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -335,7 +360,7 @@ fun CardTeam(modifier: Modifier, team: Team, totalPoints: Int, number: String, c
             )
             Text(
                 text = team.name,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color.White,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp
@@ -345,7 +370,7 @@ fun CardTeam(modifier: Modifier, team: Team, totalPoints: Int, number: String, c
                 text = "${team.points}/${totalPoints}",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color.White,
                 textAlign = TextAlign.Center
             )
         }
@@ -354,29 +379,38 @@ fun CardTeam(modifier: Modifier, team: Team, totalPoints: Int, number: String, c
 
 @Composable
 fun Points(totalPoints: Int) {
-    Row(Modifier.fillMaxWidth()) {
-        Column(
-            Modifier
-                .weight(1f)
-                .height(100.dp)
-        ) {
-            Text(text = "Puntos", fontSize = 24.sp, color = Color.White)
-            Text(
-                text = "$totalPoints",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 40.sp,
-                color = Color.White
-            )
-        }
 
-        Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
-            Text(text = "Jugadores", fontSize = 24.sp, color = Color.White)
-            Text(
-                text = "2",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 40.sp,
-                color = Color.White
-            )
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Transparent
+        )
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)) {
+            Column(
+                Modifier
+                    .weight(1f)
+            ) {
+                Text(text = "Puntos", fontSize = 24.sp, color = Color.White)
+                Text(
+                    text = "$totalPoints",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 40.sp,
+                    color = Color.White
+                )
+            }
+
+            Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+                Text(text = "Equipos", fontSize = 24.sp, color = Color.White)
+                Text(
+                    text = "2",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 40.sp,
+                    color = Color.White
+                )
+            }
         }
     }
 }
@@ -385,10 +419,14 @@ fun Points(totalPoints: Int) {
 fun BackgroundHome() {
     Box(
         Modifier
-            .height(240.dp)
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primary)
-    ) {}
+            .fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.background),
+            contentDescription = "Background app",
+            contentScale = ContentScale.Crop
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
