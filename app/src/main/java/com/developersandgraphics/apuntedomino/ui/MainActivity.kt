@@ -279,7 +279,7 @@ fun Matches(modifier: Modifier, matches: List<Score>, onDeleteScore: (Score) -> 
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Puntuaje",
+                text = "Puntaje",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
@@ -522,7 +522,7 @@ fun AddDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "¡Agrega la puntiacion!",
+                        text = "¡Agrega la puntuacion!",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
